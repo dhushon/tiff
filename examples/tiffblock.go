@@ -14,7 +14,8 @@ import (
 	"os"
 	"path/filepath"
 
-	tiff "github.com/chai2010/tiff"
+	//tiff "github.com/chai2010/tiff"
+	tiff "github.com/dhushon/tiff"
 )
 
 var files = []string{
