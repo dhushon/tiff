@@ -1,5 +1,6 @@
-- *Go语言QQ群: 102319854, 1055927514*
-- *凹语言(凹读音“Wa”)(The Wa Programming Language): https://github.com/wa-lang/wa*
+# Updated TIFF handling library
+
+Please note that this is a forked version of a circa 2014 tiff library from github.com/chai2010/tiff
 
 ----
 
@@ -8,7 +9,6 @@ TIFF for Go
 
 [![Build Status](https://travis-ci.org/chai2010/tiff.svg)](https://travis-ci.org/chai2010/tiff)
 [![GoDoc](https://godoc.org/github.com/chai2010/tiff?status.svg)](https://godoc.org/github.com/chai2010/tiff)
-
 
 **Features:**
 
@@ -22,8 +22,9 @@ TIFF for Go
 Install
 =======
 
-1. `go get github.com/chai2010/tiff`
-2. `go run hello.go`
+1. `go get github.com/dhushon/tiff`
+2. `cd examples\hello`
+3. `go run hello.go`
 
 Example
 =======
@@ -34,29 +35,29 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 
-	tiff "github.com/chai2010/tiff"
+	tiff "github.com/dhushon/tiff"
 )
 
-func main() {
-	var data []byte
-	var err error
+var files = []string{
+	"./testdata/BigTIFFSamples/BigTIFFSubIFD8.tif",
+	"./testdata/multipage/multipage-gopher.tif",
+}
 
-	var files = []string{
-		"./testdata/BigTIFFSamples/BigTIFFSubIFD8.tif",
-		"./testdata/multipage/multipage-gopher.tif",
-	}
-	for _, filename := range files {
+func main() {
+	for _, name := range files {
 		// Load file data
-		if data, err = ioutil.ReadFile(filename); err != nil {
+		f, err := os.Open(name)
+		if err != nil {
 			log.Fatal(err)
 		}
+		defer f.Close()
 
 		// Decode tiff
-		m, errors, err := tiff.DecodeAll(bytes.NewReader(data))
+		m, errors, err := tiff.DecodeAll(f)
 		if err != nil {
 			log.Println(err)
 		}
@@ -64,7 +65,7 @@ func main() {
 		// Encode tiff
 		for i := 0; i < len(m); i++ {
 			for j := 0; j < len(m[i]); j++ {
-				newname := fmt.Sprintf("%s-%02d-%02d.tiff", filepath.Base(filename), i, j)
+				newname := fmt.Sprintf("%s-%02d-%02d.tiff", filepath.Base(name), i, j)
 				if errors[i][j] != nil {
 					log.Printf("%s: %v\n", newname, err)
 					continue
@@ -74,7 +75,7 @@ func main() {
 				if err = tiff.Encode(&buf, m[i][j], nil); err != nil {
 					log.Fatal(err)
 				}
-				if err = ioutil.WriteFile(newname, buf.Bytes(), 0666); err != nil {
+				if err = os.WriteFile(newname, buf.Bytes(), 0666); err != nil {
 					log.Fatal(err)
 				}
 				fmt.Printf("Save %s ok\n", newname)
@@ -88,5 +89,6 @@ BUGS
 ====
 
 Report bugs to <chaishushan@gmail.com>.
+or to <hushon@gmail.com>
 
 Thanks!

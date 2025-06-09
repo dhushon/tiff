@@ -2,19 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build ingore
-
 package main
 
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 
-	tiff "github.com/chai2010/tiff"
+	tiff "github.com/dhushon/tiff"
 )
 
 var files = []string{
@@ -50,7 +47,7 @@ func main() {
 				if err = tiff.Encode(&buf, m[i][j], nil); err != nil {
 					log.Fatal(err)
 				}
-				if err = ioutil.WriteFile(newname, buf.Bytes(), 0666); err != nil {
+				if err = os.WriteFile(newname, buf.Bytes(), 0666); err != nil {
 					log.Fatal(err)
 				}
 				fmt.Printf("Save %s ok\n", newname)

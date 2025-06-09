@@ -9,9 +9,8 @@ import (
 	"compress/zlib"
 	"fmt"
 	"io"
-	"io/ioutil"
 
-	"github.com/chai2010/tiff/internal/fax"
+	"github.com/dhushon/tiff/internal/fax"
 )
 
 func (p TagValue_CompressionType) Decode(r io.Reader, width, height int) (data []byte, err error) {
@@ -42,7 +41,7 @@ func (p TagValue_CompressionType) Decode(r io.Reader, width, height int) (data [
 }
 
 func (p TagValue_CompressionType) decode_None(r io.Reader) (data []byte, err error) {
-	data, err = ioutil.ReadAll(r)
+	data, err = io.ReadAll(r)
 	return
 }
 
@@ -66,7 +65,7 @@ func (p TagValue_CompressionType) decode_G4(r io.Reader, width, height int) (dat
 
 func (p TagValue_CompressionType) decode_LZW(r io.Reader) (data []byte, err error) {
 	lzwReader := newLzwReader(r, lzwMSB, 8)
-	data, err = ioutil.ReadAll(lzwReader)
+	data, err = io.ReadAll(lzwReader)
 	lzwReader.Close()
 	return
 }
@@ -87,7 +86,7 @@ func (p TagValue_CompressionType) decode_Deflate(r io.Reader) (data []byte, err 
 	if err != nil {
 		return nil, err
 	}
-	data, err = ioutil.ReadAll(zlibReader)
+	data, err = io.ReadAll(zlibReader)
 	zlibReader.Close()
 	return
 }
@@ -97,7 +96,7 @@ func (p TagValue_CompressionType) decode_DeflateOld(r io.Reader) (data []byte, e
 	if err != nil {
 		return nil, err
 	}
-	data, err = ioutil.ReadAll(zlibReader)
+	data, err = io.ReadAll(zlibReader)
 	zlibReader.Close()
 	return
 }

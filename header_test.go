@@ -6,7 +6,7 @@ package tiff
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestHeader_decodeAndEncode_files(t *testing.T) {
 		"BigTIFFSubIFD8.tif",
 	}
 	for i := 0; i < len(files); i++ {
-		data, err := ioutil.ReadFile("./testdata/BigTIFFSamples/" + files[i])
+		data, err := os.ReadFile("./testdata/BigTIFFSamples/" + files[i])
 		if err != nil {
 			t.Fatalf("%d: %v", i, err)
 		}
